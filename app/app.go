@@ -30,7 +30,8 @@ func App() {
 		HideHelpCommand:        true,
 
 		Commands: []*cli.Command{
-			cmdBanner,
+			bannerCmd,
+			scanCmd,
 		},
 
 		Flags: []cli.Flag{
