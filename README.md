@@ -8,7 +8,7 @@ TrailBlaze is designed for security and devops teams to easily assess the most c
 - [ ] SSH concurrent connector (execute remote commands)
 - [ ] SSH password brute forcer
 - [ ] SSH private key brute forcer
-- [ ] TCP scanner
+- [x] TCP scanner
 
 If you enjoy this project, I hope you will contribute to it with code or financial support.
 
