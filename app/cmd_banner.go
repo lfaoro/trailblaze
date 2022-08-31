@@ -27,7 +27,7 @@ var (
 	bannerThreadsC chan struct{}
 )
 
-var cmdBanner = &cli.Command{
+var bannerCmd = &cli.Command{
 	Name:    "banner",
 	Aliases: []string{"b"},
 
