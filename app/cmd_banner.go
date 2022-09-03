@@ -77,7 +77,6 @@ var bannerCmd = &cli.Command{
 }
 
 func actionBanner(c *cli.Context) error {
-
 	signalC := make(chan os.Signal, 1)
 	signal.Notify(signalC, os.Interrupt, os.Kill, syscall.SIGTERM)
 
@@ -87,11 +86,11 @@ func actionBanner(c *cli.Context) error {
 	}
 	defer logFile.Close()
 
-	hosts := load.Hosts(flagBannerHostsFile)
-	hostsLen := len(hosts)
-	if hostsLen == 0 {
-		return fmt.Errorf("file %v has no IP:PORT records", flagBannerHostsFile)
+	hosts, err := load.Hosts(flagBannerHostsFile)
+	if err != nil {
+		log.Fatal(err)
 	}
+	hostsLen := len(hosts)
 	log.Infof("loaded %v hosts from %v file", len(hosts), flagBannerHostsFile)
 
 	if flagBannerThreads == 0 {
