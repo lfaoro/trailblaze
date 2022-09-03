@@ -7,6 +7,9 @@ import (
 )
 
 func TestLoadHosts(t *testing.T) {
-	h := load.Hosts("./testdata/host_file.txt")
+	h, err := load.Hosts("./testdata/host_file.txt")
+	if err != nil {
+		t.Fail()
+	}
 	t.Log(h)
 }

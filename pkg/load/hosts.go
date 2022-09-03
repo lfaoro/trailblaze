@@ -20,13 +20,13 @@ func (h Host) String() string {
 	return fmt.Sprintf("%v:%v", h.IP, h.Port)
 }
 
-func Hosts(file string) []Host {
+func Hosts(file string) ([]Host, error) {
 	var hosts []Host
 	var seen = map[string]bool{}
 
 	f, err := os.Open(file)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer f.Close()
 
@@ -34,6 +34,7 @@ func Hosts(file string) []Host {
 	for scan.Scan() {
 		if scan.Err() != nil {
 			log.Error(scan.Err())
+			continue
 		}
 
 		if !strings.Contains(scan.Text(), ":") {
@@ -41,13 +42,14 @@ func Hosts(file string) []Host {
 			continue
 		}
 		if strings.HasPrefix(scan.Text(), "#") {
+			log.Infof("%v: skipping commented line", scan.Text())
 			continue
 		}
 
 		host := strings.TrimSpace(scan.Text())
 		split := strings.Split(host, ":")
 		if len(split) < 2 {
-			log.Errorf("[%v] wrong format, use IP:PORT", host)
+			log.Errorf("%v wrong format, use IP:PORT", host)
 			continue
 		}
 
@@ -78,5 +80,9 @@ func Hosts(file string) []Host {
 		seen[h.String()] = true
 		hosts = append(hosts, h)
 	}
-	return hosts
+
+	if len(hosts) == 0 {
+		return nil, fmt.Errorf("%v: has no IP:PORT records", file)
+	}
+	return hosts, nil
 }
