@@ -36,6 +36,8 @@ var scanCmd = &cli.Command{
 	Action:  scanAction,
 
 	Flags: []cli.Flag{
+
+		// TODO: Not implemented
 		&cli.StringFlag{
 			Name:      "file",
 			Aliases:   []string{"f"},
@@ -103,8 +105,8 @@ var scanCmd = &cli.Command{
 }
 
 func scanAction(c *cli.Context) error {
-
 	var hosts []string
+
 	if scanRangeFlag != "" {
 		log.Infof("generating addresses for %v ...", scanRangeFlag)
 		ss, err := IPv4Wildcard(scanRangeFlag)
@@ -114,11 +116,13 @@ func scanAction(c *cli.Context) error {
 		hosts = ss
 		log.Infof("created %v addresses", len(hosts))
 	}
+
 	if scanLocalFlag != "" {
 		log.Infof("generating addresses for %v ...", scanLocalFlag)
 		hosts = genRanges(scanLocalFlag)
 		log.Infof("created %v addresses", len(hosts))
 	}
+
 	if scanLanFlag {
 		hostname, _ := os.Hostname()
 		log.Infof("gathering local networks from %v ...", hostname)
@@ -190,6 +194,7 @@ func scanAction(c *cli.Context) error {
 
 func IPv4Wildcard(target string) ([]string, error) {
 	var hosts []string
+
 	items := strings.Split(target, ".")
 	var blocks [4][]string
 	for i := 0; i <= 3; i++ {
@@ -238,12 +243,8 @@ func IPv4Wildcard(target string) ([]string, error) {
 	return hosts, nil
 }
 
-/*
-	genRanges
-
-TOD: add more bogon networks
-https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml
-*/
+// TODO: add more bogon networks
+// doc: www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml
 func genRanges(s string) []string {
 	var hosts []string
 
@@ -335,7 +336,6 @@ func IPv4CIDR(cidr string) ([]string, error) {
 	if size > 2 {
 		hosts = hosts[1 : size-1]
 	}
-
 	return hosts, nil
 }
 

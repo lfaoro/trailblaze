@@ -13,7 +13,7 @@ const maxVersionStringBytes = 255
 
 // Read version string as specified by RFC 4253, section 4.2.
 func readVersion(r io.Reader) ([]byte, error) {
-	versionString := make([]byte, 0, 64)
+	var versionString = make([]byte, 0, 64)
 	var ok bool
 	var buf [1]byte
 
