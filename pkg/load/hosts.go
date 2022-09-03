@@ -3,6 +3,7 @@ package load
 import (
 	"bufio"
 	"fmt"
+	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -21,6 +22,7 @@ func (h Host) String() string {
 
 func Hosts(file string) []Host {
 	var hosts []Host
+	var seen = map[string]bool{}
 
 	f, err := os.Open(file)
 	if err != nil {
@@ -35,7 +37,7 @@ func Hosts(file string) []Host {
 		}
 
 		if !strings.Contains(scan.Text(), ":") {
-			log.Errorf("%v:%v wrong format, use USER:PASS", file, scan.Text())
+			log.Errorf("%v: (%v) wrong format, use IP:PORT", file, scan.Text())
 			continue
 		}
 		if strings.HasPrefix(scan.Text(), "#") {
@@ -50,17 +52,30 @@ func Hosts(file string) []Host {
 		}
 
 		ip := split[0]
+		netIP := net.ParseIP(ip)
+		if netIP == nil {
+			log.Errorf("%v is not a valid IPv4 address", ip)
+			continue
+		}
+
 		port := split[1]
 		port = strings.Split(port, " ")[0]
 		_port, err := strconv.Atoi(port)
 		if err != nil {
 			log.Error(err)
+			continue
 		}
 
 		h := Host{
 			IP:   ip,
 			Port: _port,
 		}
+
+		// skip duplicates
+		if seen[h.String()] {
+			continue
+		}
+		seen[h.String()] = true
 		hosts = append(hosts, h)
 	}
 	return hosts
