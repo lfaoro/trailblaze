@@ -1,11 +1,11 @@
 .DS_Store
 .vscode
+dist/
+
 _*.go
 _*/
-idea.md
-scan.log
-tb
 *.log
 *.toml
 
-dist/
+idea.md
+tb
