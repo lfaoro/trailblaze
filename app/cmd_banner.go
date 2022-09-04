@@ -57,7 +57,7 @@ var bannerCmd = &cli.Command{
 			Usage:       "load banner hosts `FILE` in IP:PORT format",
 			Destination: &flagBannerHostsFile,
 
-			Value: "banner.hosts",
+			Value: "scan.log",
 		},
 
 		&cli.StringFlag{
