@@ -47,7 +47,6 @@ var bannerCmd = &cli.Command{
 			Aliases:     []string{"T"},
 			Usage:       "TCP connection timeout",
 			Destination: &flagBannerTimeout,
-			Required:    true,
 
 			Value: time.Second * 5,
 		},
@@ -57,7 +56,6 @@ var bannerCmd = &cli.Command{
 			Aliases:     []string{"H"},
 			Usage:       "load banner hosts `FILE` in IP:PORT format",
 			Destination: &flagBannerHostsFile,
-			Required:    true,
 
 			Value: "banner.hosts",
 		},
@@ -67,7 +65,6 @@ var bannerCmd = &cli.Command{
 			Aliases:     []string{"o"},
 			Usage:       "write found banners to `FILE` in IP:PORT:BANNER format",
 			Destination: &flagBannerOutputFile,
-			Required:    true,
 
 			Value: "banner.log",
 		},
@@ -101,6 +98,7 @@ func actionBanner(c *cli.Context) error {
 	bannerThreadsC = make(chan struct{}, flagBannerThreads)
 
 	bar := pkg.NewProgressBar(hostsLen, "Extract SSH Banners")
+	defer bar.Close()
 
 	var vuln = vulnCounter{}
 	// wg allows us to wait for unfinished goroutines
@@ -126,7 +124,7 @@ func actionBanner(c *cli.Context) error {
 			if err != nil {
 				log.Debugf("%v --> %v", hostPort, err)
 				if strings.Contains(err.Error(), "too many open files") {
-					log.Fatal("too many open file descriptors: increase system limits (ulimit -n int)")
+					log.Fatal("too many open file descriptors: use `ulimit -n int` to grow them.")
 				}
 				return
 			}
@@ -146,9 +144,11 @@ func actionBanner(c *cli.Context) error {
 		}(host.String())
 	}
 
+	fmt.Printf("\r\n")
 	log.Info("waiting for connections to timeout and close...")
 	wg.Wait()
 	close(bannerThreadsC)
+	bar.Describe(fmt.Sprintf("found[%v]", vuln.Get()))
 	log.Infof("created %v in HOST:PORT:BANNER format", flagBannerOutputFile)
 	return nil
 }
@@ -174,8 +174,7 @@ func (f *vulnCounter) Get() int {
 }
 
 // setThreads returns the number of allowed goroutines based on the number
-// of hosts; panics if the calculation is higher than the kernel limit for
-// open file descriptors.
+// of hosts.
 func setThreads(input int) int {
 	fdLimit := rlimit.Get().Max
 	if fdLimit == 0 {
