@@ -7,3 +7,5 @@ scan.log
 tb
 *.log
 *.toml
+
+dist/

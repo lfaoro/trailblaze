@@ -20,8 +20,8 @@ func init() {
 func App() {
 	app := &cli.App{
 		Name:      "trailblaze",
-		Usage:     "pentest tools",
-		Version:   "v0.1",
+		Usage:     " TrailBlaze - SSH Pentest & Audit",
+		Version:   "v0.1.0",
 		Compiled:  time.Now(),
 		Copyright: "(c) Leonardo Faoro",
 
