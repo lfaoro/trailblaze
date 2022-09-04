@@ -5,3 +5,5 @@ _*/
 idea.md
 scan.log
 tb
+*.log
+*.toml
