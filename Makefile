@@ -10,4 +10,4 @@ run: build
 release:
 	git tag -a v0.1.1 -m "second release"
 	git push origin v0.1.1
-	goreleaser release
+	goreleaser release --rm-dist
