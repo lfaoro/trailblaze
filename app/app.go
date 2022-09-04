@@ -21,7 +21,7 @@ func App() {
 	app := &cli.App{
 		Name:      "trailblaze",
 		Usage:     " TrailBlaze - SSH Pentest & Audit",
-		Version:   "v0.1.0",
+		Version:   "v0.1.1",
 		Compiled:  time.Now(),
 		Copyright: "(c) Leonardo Faoro",
 
