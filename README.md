@@ -10,6 +10,13 @@ TrailBlaze is designed for security and devops teams to easily assess the most c
 - [ ] SSH password brute forcer
 - [ ] SSH private key brute forcer
 
+## Install
+### Go
+`$ go install github.com/lfaoro/trailblaze@latest`
+
+### Release
+https://github.com/lfaoro/trailblaze/releases
+
 ## Donations
 If you're using this software for-profit, please consider a donation.
 
